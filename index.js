@@ -24,15 +24,15 @@ function InprocBackend(config) {
     this.get = function (col, keys, callback, options) {
         inproc[col] = inproc[col] || { };
         if (keys === '*') {
-            callback(undefined, inproc[col]);
+            callback(null, inproc[col]);
         } else if (util.isArray(keys)) {
             var results = { };
             keys.forEach(function (key) {
-                results[key] = inproc[col][key];
+                results[key] = inproc[col][key] || null;
             });
-            callback(undefined, results);
+            callback(null, results);
         } else {
-            callback(undefined, inproc[col][keys]);
+            callback(null, inproc[col][keys] || null);
         }
     }; 
 
@@ -44,12 +44,12 @@ function InprocBackend(config) {
                 delete inproc[col][key];
             }, options.expiration * 1000);
         }
-        if (typeof callback === 'function') callback(undefined, null);
+        if (typeof callback === 'function') callback(null, null);
     };
 
-    this.del = function (model, key, callback) {
+    this.del = function (col, key, callback) {
         delete inproc[col][key];
-        if (typeof callback === 'function') callback(undefined, null);
+        if (typeof callback === 'function') callback(null, null);
     };
 
     self.cache = {
@@ -80,7 +80,7 @@ function InprocBackend(config) {
         },
         del: function (recordid, name, callback) {
             delete inproc['files'][recordid][name];
-            callback(undefined, null);
+            callback(null, null);
         }
     };
 
