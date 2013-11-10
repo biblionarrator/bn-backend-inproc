@@ -96,3 +96,9 @@ function InprocBackend(config) {
 }
 
 module.exports = InprocBackend;
+module.exports.description = 'In-memory backend (no dependencies, but no persistence)';
+module.exports.features = {
+    datastore: true,
+    mediastore: true,
+    cache: true
+};
